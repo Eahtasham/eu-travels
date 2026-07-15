@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+:root {
+  --background: transparent;
+  --foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-marcellus);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Keep in-page anchor targets clear of the fixed header. */
+:where(section[id]) {
+  scroll-margin-top: 6rem;
+}
+
+body {
+  background-color: #020202;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Premium text readability shadows for overlaying dynamic canvas skies */
+.text-glow {
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.65), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.text-glow-subtle {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+/* Glassmorphic border utility */
+.glass-border {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   Hero art direction — text sits over a shifting bright photographic sky,
+   so legibility is guaranteed by owned scrims, not by the frame behind it.
+   ========================================================================== */
+
+/* Soft white text-halo: lifts black copy off the medium-blue sky patches. */
+.text-glow-light {
+  text-shadow:
+    0 1px 30px rgba(255, 255, 255, 0.6),
+    0 1px 4px rgba(255, 255, 255, 0.55);
+}
+
+/* Luminous scrim behind the centred hero copy. Reads as light streaming
+   through the window while guaranteeing contrast for the black headline. */
+.hero-halo {
+  background: radial-gradient(
+    62% 58% at 50% 44%,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.42) 34%,
+    rgba(255, 255, 255, 0.12) 62%,
+    rgba(255, 255, 255, 0) 82%
+  );
+}
+
+/* Top scrim behind the fixed header so the logo + nav stay legible across
+   every frame of the scroll sequence (dark cabin → bright clouds). */
+.header-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 6, 12, 0.55) 0%,
+    rgba(3, 6, 12, 0.28) 45%,
+    rgba(3, 6, 12, 0) 100%
+  );
+}
+
+/* ==========================================================================
+   Glass surfaces — deliberately thin. The scroll video is the imagery; cards
+   are a whisper of structure over it, not a wall. Legibility comes from the
+   text-glow halo above, not from opacity, so these can stay this light.
+   ========================================================================== */
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(6, 10, 18, 0.16);
+}
+
+.glass-panel-tight {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 28px rgba(6, 10, 18, 0.14);
+}
+
+/* ==========================================================================
+   Scroll reveals — see components/Reveal.tsx. Default is always fully
+   visible; JS arms a hidden pre-state imperatively (never baked into SSR
+   markup), so no-JS clients and headless renderers that never fire the
+   observer still get complete, visible content — never a blank section.
+   ========================================================================== */
+
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+.reveal-armed.reveal-in {
+  animation: rise-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stagger-armed > * {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.stagger-armed.reveal-in > * {
+  animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* ==========================================================================
+   Motion — serene, deliberate. Reveals animate from a visible baseline
+   (fill-mode both, no persistent opacity:0), so if animation never runs the
+   content is still shown. All of it collapses under reduced-motion.
+   ========================================================================== */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rise-blur {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes cue-drift {
+  0% {
+    transform: translateY(-45%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(135%);
+    opacity: 0;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-reveal {
+  animation: rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-reveal-headline {
+  animation: rise-blur 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.scroll-cue-dot {
+  animation: cue-drift 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Gentle continuous drift for the compass mark — barely-there, not restless. */
+.animate-spin-slow {
+  animation: spin-slow 26s linear infinite;
+}
+
+/* ==========================================================================
+   Focus — one ring that stays visible on both the black CTA and the bright
+   sky: white edge + dark outer halo.
+   ========================================================================== */
+.focus-ring:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(4, 6, 12, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-reveal,
+  .hero-reveal-headline {
+    animation: none;
+  }
+  .scroll-cue-dot {
+    animation: none;
+    opacity: 0.65;
+  }
+  .animate-spin-slow {
+    animation: none;
+  }
+  .reveal-armed,
+  .stagger-armed > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
