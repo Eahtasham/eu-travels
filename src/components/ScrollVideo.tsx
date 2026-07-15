@@ -84,9 +84,14 @@ export default function ScrollVideo() {
 
     video.addEventListener('loadedmetadata', onLoadedMetadata);
     video.addEventListener('progress', onProgress);
-    video.addEventListener('canplaythrough', start);
-    // Failsafe: never hang on the loader if canplaythrough is slow to fire.
-    const failsafe = window.setTimeout(start, 6000);
+    // 'loadeddata' (first frame decodable) rather than 'canplaythrough'
+    // (browser estimates the *whole* file can download in time to play
+    // straight through). We only ever seek nearby frames via HTTP range
+    // requests, so waiting for a full-file download estimate before
+    // starting was the main source of a slow-feeling load.
+    video.addEventListener('loadeddata', start);
+    // Failsafe: never hang on the loader if loadeddata is slow to fire.
+    const failsafe = window.setTimeout(start, 4000);
 
     return () => {
       window.removeEventListener('scroll', computeTarget);
@@ -95,7 +100,7 @@ export default function ScrollVideo() {
       window.clearTimeout(failsafe);
       video.removeEventListener('loadedmetadata', onLoadedMetadata);
       video.removeEventListener('progress', onProgress);
-      video.removeEventListener('canplaythrough', start);
+      video.removeEventListener('loadeddata', start);
     };
   }, []);
 
