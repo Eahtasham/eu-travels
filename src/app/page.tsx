@@ -9,7 +9,7 @@ import {
   Headphones,
   Calendar,
 } from 'lucide-react';
-import ScrollVideo from '../components/ScrollVideo';
+import ScrollCanvas from '../components/ScrollCanvas';
 import Reveal from '../components/Reveal';
 
 const services = [
@@ -103,8 +103,8 @@ const testimonials = [
 export default function Home() {
   return (
     <div className="relative min-h-screen font-sans selection:bg-black/10 selection:text-black">
-      {/* Scroll-scrubbed video background (crisp, full-res, 30fps grid) */}
-      <ScrollVideo />
+      {/* Scroll-scrubbed image-sequence background (instant seeks, no video-decode lag) */}
+      <ScrollCanvas />
 
       {/* Top scrim — keeps the header legible across every frame of the sequence
           (dark cabin at the hero, bright clouds mid-scroll). */}
